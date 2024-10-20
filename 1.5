@@ -1,0 +1,157 @@
+src/
+├── aplicacion/
+│   └── Principal.java
+└── dominio/
+    ├── Localidad.java
+    ├── Municipio.java
+    └── Provincia.java
+    package aplicacion;
+
+    import dominio.Localidad;
+    import dominio.Municipio;
+    import dominio.Provincia;
+    
+    public class Principal {
+        public static void main(String[] args) {
+            // Crear una localidad y mostrarla
+            Localidad localidad = new Localidad("Localidad 1", 5000);
+            System.out.println(localidad);
+    
+            // Crear un municipio con varias localidades
+            Municipio municipio = new Municipio("Municipio 1");
+            municipio.agregarLocalidad(new Localidad("Localidad 2", 3000));
+            municipio.agregarLocalidad(localidad);  // Añadir la localidad creada previamente
+            System.out.println(municipio);
+            System.out.println("Habitantes del municipio: " + municipio.getNumeroTotalHabitantes());
+    
+            // Crear una provincia con varios municipios
+            Provincia provincia = new Provincia("Provincia 1");
+            provincia.agregarMunicipio(municipio);
+            provincia.agregarMunicipio(new Municipio("Municipio 2", new Localidad("Localidad 3", 2000)));
+    
+            System.out.println(provincia);
+            System.out.println("Habitantes de la provincia: " + provincia.getNumeroTotalHabitantes());
+        }
+    }
+    package dominio;
+
+    public class Localidad {
+        private String nombre;
+        private int numeroDeHabitantes;
+    
+        // Constructor
+        public Localidad(String nombre, int numeroDeHabitantes) {
+            this.nombre = nombre;
+            this.numeroDeHabitantes = numeroDeHabitantes;
+        }
+    
+        // Getters y Setters
+        public String getNombre() {
+            return nombre;
+        }
+    
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+    
+        public int getNumeroDeHabitantes() {
+            return numeroDeHabitantes;
+        }
+    
+        public void setNumeroDeHabitantes(int numeroDeHabitantes) {
+            this.numeroDeHabitantes = numeroDeHabitantes;
+        }
+    
+        // Método toString
+        @Override
+        public String toString() {
+            return "Localidad: " + nombre + ", Habitantes: " + numeroDeHabitantes;
+        }
+    }
+    package dominio;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    
+    public class Municipio {
+        private String nombre;
+        private List<Localidad> localidades;
+    
+        // Constructor
+        public Municipio(String nombre) {
+            this.nombre = nombre;
+            this.localidades = new ArrayList<>();
+        }
+    
+        // Constructor con localidades
+        public Municipio(String nombre, Localidad localidadInicial) {
+            this(nombre);
+            this.localidades.add(localidadInicial);
+        }
+    
+        // Método para agregar una localidad
+        public void agregarLocalidad(Localidad localidad) {
+            localidades.add(localidad);
+        }
+    
+        // Método para contar el número total de habitantes del municipio
+        public int getNumeroTotalHabitantes() {
+            int totalHabitantes = 0;
+            for (Localidad localidad : localidades) {
+                totalHabitantes += localidad.getNumeroDeHabitantes();
+            }
+            return totalHabitantes;
+        }
+    
+        // Método toString
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Municipio: ").append(nombre).append("\n");
+            for (Localidad localidad : localidades) {
+                sb.append("  ").append(localidad).append("\n");
+            }
+            return sb.toString();
+        }
+    }
+    package dominio;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    
+    public class Provincia {
+        private String nombre;
+        private List<Municipio> municipios;
+    
+        // Constructor
+        public Provincia(String nombre) {
+            this.nombre = nombre;
+            this.municipios = new ArrayList<>();
+        }
+    
+        // Método para agregar un municipio
+        public void agregarMunicipio(Municipio municipio) {
+            municipios.add(municipio);
+        }
+    
+        // Método para contar el número total de habitantes de la provincia
+        public int getNumeroTotalHabitantes() {
+            int totalHabitantes = 0;
+            for (Municipio municipio : municipios) {
+                totalHabitantes += municipio.getNumeroTotalHabitantes();
+            }
+            return totalHabitantes;
+        }
+    
+        // Método toString
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Provincia: ").append(nombre).append("\n");
+            for (Municipio municipio : municipios) {
+                sb.append(municipio).append("\n");
+            }
+            return sb.toString();
+        }
+    }
+                
